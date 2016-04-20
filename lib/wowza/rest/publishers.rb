@@ -9,7 +9,7 @@ module Wowza
       def all
         resp = conn.get('publishers')
         JSON.parse(resp.body)['publishers'].map do |p|
-          Publisher.new(p["name"])
+          Publisher.new(name: p["name"])
         end
       end
 
