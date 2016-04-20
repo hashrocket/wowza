@@ -20,25 +20,24 @@ describe Wowza::REST::Publishers do
   end
 
   context '#all' do
-    before do
-      stub_request(:get, 'http://example.com:1234/v2/servers/server/publishers').with({
-        headers: {
-          'Accept' => 'application/json'
-        }
-      }).to_return({
-        headers: {
-          'Content-Type' => 'application/json'
-        },
-        status: 200,
-        body: publishers_response
-      })
+
+    def publishers_api(response)
+      Mock5.mock('http://example.com:1234') do
+        get '/v2/servers/server/publishers' do
+          status 200
+          headers 'Content-Type' => 'application/json'
+          response
+        end
+      end
     end
 
     it 'fetches all publishers' do
-      publishers = client.publishers.all
+      Mock5.with_mounted publishers_api(publishers_response) do
+        publishers = client.publishers.all
 
-      expect(publishers.count).to eq(1)
-      expect(publishers.first.name).to eq('wowza')
+        expect(publishers.count).to eq(1)
+        expect(publishers.first.name).to eq('wowza')
+      end
     end
   end
 end
