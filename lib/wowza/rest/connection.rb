@@ -6,6 +6,7 @@ module Wowza
       attr_reader :uri, :auth
       def_delegator :conn, :get
       def_delegator :conn, :post
+      def_delegator :conn, :put
 
       def initialize(uri, auth)
         @auth = auth

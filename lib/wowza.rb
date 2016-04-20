@@ -3,6 +3,7 @@ require 'faraday'
 require 'faraday/digestauth'
 require 'base64'
 require 'json'
+require 'active_model'
 
 require 'wowza/rest/publishers'
 require 'wowza/rest/publisher'

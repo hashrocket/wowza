@@ -1,21 +1,44 @@
 module Wowza
   module REST
-    class Publisher < Struct.new(:name, :password)
-      attr_accessor :client
+    class Publisher
 
-      def initialize(name:, password: nil)
-        super(name, password)
-        @_persisted = false
+      include ActiveModel::AttributeAssignment
+      include ActiveModel::Serializers::JSON
+      include ActiveModel::Dirty
+
+      attr_accessor :name, :password, :serverName, :persisted, :conn
+      define_attribute_methods :name, :password, :serverName
+
+      def initialize(attributes={})
+        assign_attributes(attributes) if attributes
+        self.persisted = false
+        super()
+      end
+
+      def attributes
+        {
+          name: name,
+          password: password
+        }
+      end
+
+      def id
+        if changes["name"].present?
+          changes["name"].first
+        else
+          name
+        end
       end
 
       def save
-        resp = client.connection.post do |req|
-          req.url 'publishers'
-          req.body = JSON.generate attrs
+        resp = conn.send(persist_method) do |req|
+          req.url persist_path
+          req.body = to_json
         end
-        if resp.status == 201
+        if resp.status == 201 || resp.status == 200
           self.persisted = true
         end
+        changes_applied
       end
 
       def attrs
@@ -25,8 +48,36 @@ module Wowza
         }
       end
 
+      def persisted=(persisted)
+        @persisted = persisted
+        if persisted
+          changes_applied
+        end
+      end
+
       def persisted?
-        @_persisted
+        persisted
+      end
+
+      def name=(newName)
+        name_will_change! unless newName == @name
+        @name = newName
+      end
+
+      def password=(newPassword)
+        password_will_change! unless newPassword == @password
+        @password = newPassword
+      end
+
+      def reload!
+        resp = conn.get resource_path
+        attributes = JSON.parse(resp.body)
+        assign_attributes(attributes) if attributes
+        clear_changes_information
+      end
+
+      def rollback!
+        restore_attributes
       end
 
       private
@@ -35,9 +86,14 @@ module Wowza
         persisted? ? :put : :post
       end
 
-      def persisted=(persisted)
-        @_persisted = persisted
+      def resource_path
+        "publishers/#{id}"
       end
+
+      def persist_path
+        persisted? ? resource_path : 'publishers'
+      end
+
     end
   end
 end

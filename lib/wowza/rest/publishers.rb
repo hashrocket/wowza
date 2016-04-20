@@ -8,8 +8,11 @@ module Wowza
 
       def all
         resp = conn.get('publishers')
-        JSON.parse(resp.body)['publishers'].map do |p|
-          Publisher.new(name: p["name"])
+        JSON.parse(resp.body)['publishers'].map do |attrs|
+          Publisher.new(name: attrs["name"]).tap do |p|
+            p.conn = conn
+            p.persisted = true
+          end
         end
       end
 

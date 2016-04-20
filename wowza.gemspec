@@ -35,4 +35,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "faraday", "~> 0.9"
   spec.add_dependency "faraday-digestauth"
+  spec.add_dependency "activemodel", "5.0.0.beta3"
 end
