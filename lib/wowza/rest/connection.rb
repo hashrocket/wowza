@@ -7,6 +7,7 @@ module Wowza
       def_delegator :conn, :get
       def_delegator :conn, :post
       def_delegator :conn, :put
+      def_delegator :conn, :delete
 
       def initialize(uri, auth)
         @auth = auth

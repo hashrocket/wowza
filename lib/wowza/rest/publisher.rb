@@ -11,8 +11,9 @@ module Wowza
 
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
-        self.persisted = false
         super()
+        self.persisted = false
+        changes_applied
       end
 
       def attributes
@@ -78,6 +79,16 @@ module Wowza
 
       def rollback!
         restore_attributes
+      end
+
+      def destroy
+        if persisted?
+          resp = conn.delete resource_path
+          if resp.status == 204
+            self.persisted = false
+            clear_changes_information
+          end
+        end
       end
 
       private

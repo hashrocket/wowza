@@ -80,4 +80,51 @@ describe Wowza::REST::Publisher do
 
     end
   end
+
+  context '#destroy' do
+
+    context 'not persisted' do
+      it 'does nothing' do
+        publisher = Wowza::REST::Publisher.new(name: 'channel', password: '321')
+        publisher.conn = client.connection
+        publisher.destroy
+
+        expect(publisher.persisted?).to eq(false)
+        expect(publisher.changed?).to eq(false)
+      end
+    end
+
+    context 'already persisted' do
+      def publishers_api
+        Mock5.mock('http://example.com:1234') do
+
+          get '/v2/servers/server/publishers' do
+            status 200
+            headers 'Content-Type' => 'application/json'
+            JSON.generate({
+              serverName: 'server',
+              publishers: [{ name: 'name' }]
+            })
+          end
+
+          delete '/v2/servers/server/publishers/name' do
+            halt 204
+          end
+
+        end
+      end
+
+      it 'deletes publisher' do
+        Mock5.with_mounted publishers_api do
+          publisher = client.publishers.all.first
+          expect(publisher.persisted?).to eq(true)
+          expect(publisher.changed?).to eq(false)
+          publisher.destroy
+          expect(publisher.persisted?).to eq(false)
+          expect(publisher.changed?).to eq(false)
+        end
+      end
+
+    end
+  end
 end
