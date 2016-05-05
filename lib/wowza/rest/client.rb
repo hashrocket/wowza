@@ -12,6 +12,16 @@ module Wowza
         @_publishers ||= Publishers.new(connection)
       end
 
+      def status
+        StatusParser.new.parse(get_json('status'))
+      end
+
+      private
+
+      def get_json(path)
+        JSON.parse(connection.get(path).body)
+      end
+
     end
   end
 end
