@@ -13,6 +13,8 @@ require 'wowza/rest/connection'
 require 'wowza/rest/server'
 require 'wowza/rest/status_parser'
 require 'wowza/rest/client'
+require 'wowza/rest/applications'
+require 'wowza/rest/application'
 
 module Wowza
 end

@@ -9,7 +9,11 @@ module Wowza
       end
 
       def publishers
-        @_publishers ||= Publishers.new(connection)
+        Publishers.new(connection)
+      end
+
+      def applications
+        Applications.new(connection)
       end
 
       def status
