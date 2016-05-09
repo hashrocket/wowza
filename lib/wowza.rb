@@ -17,6 +17,7 @@ require 'wowza/rest/applications'
 require 'wowza/rest/application'
 require 'wowza/rest/instances'
 require 'wowza/rest/instance'
+require 'wowza/rest/stream'
 
 module Wowza
 end

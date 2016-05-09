@@ -4,7 +4,7 @@ module Wowza
 
       include ActiveModel::AttributeAssignment
 
-      attr_accessor :name, :conn
+      attr_accessor :incoming_streams, :name, :conn
 
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
