@@ -28,6 +28,14 @@ module Wowza
         Instances.new(conn, self)
       end
 
+      def href
+        if !@href && id
+          "/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/#{id}"
+        else
+          @href
+        end
+      end
+
     end
   end
 end

@@ -14,12 +14,8 @@ describe Wowza::REST::Instance do
     client.connection
   end
 
-  let(:application_href) do
-    '/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/live'
-  end
-
   let(:application) do
-    object_double(Wowza::REST::Application.new, href: application_href, conn: conn)
+    Wowza::REST::Application.new id: 'live', conn: conn
   end
 
   let(:instances) do
