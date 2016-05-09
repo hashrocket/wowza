@@ -15,12 +15,8 @@ module Wowza
           })
           streams = attrs.fetch("incomingStreams", [])
           instance.incoming_streams = streams.map do |stream|
-            Stream.new({
-              name: stream["name"],
-              is_connected: stream["isConnected"],
-              is_recording: stream["isRecordingSet"],
-              source_ip: stream["sourceIp"],
-            })
+            attrs = Stream.deserialize(stream)
+            Stream.new(attrs.merge({ conn: conn }))
           end
           instance
         end
