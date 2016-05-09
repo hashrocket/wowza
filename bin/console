@@ -13,4 +13,7 @@ streams = application.instances.all.first.incoming_streams
 
 stream_by_name = Wowza::REST::Stream.find_by name: 'Snowboarding', app_id: 'live', conn: conn
 
+group = Wowza::REST::StreamGroup.find_by stream_name: 'Snowboarding', app_id: 'live', conn: conn
+stream_by_group = group.streams.first
+
 binding.pry;
