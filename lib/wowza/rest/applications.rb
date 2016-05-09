@@ -17,7 +17,9 @@ module Wowza
             drm_enabled: attrs["drmEnabled"],
             transcoder_enabled: attrs["transcoderEnabled"],
             stream_targets_enabled: attrs["streamTargetsEnabled"],
-          })
+          }).tap do |app|
+            app.conn = conn
+          end
         end
       end
 

@@ -15,6 +15,8 @@ require 'wowza/rest/status_parser'
 require 'wowza/rest/client'
 require 'wowza/rest/applications'
 require 'wowza/rest/application'
+require 'wowza/rest/instances'
+require 'wowza/rest/instance'
 
 module Wowza
 end

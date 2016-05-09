@@ -5,7 +5,7 @@ module Wowza
       include ActiveModel::AttributeAssignment
 
       attr_accessor :id, :href, :app_type, :dvr_enabled, :drm_enabled,
-        :transcoder_enabled, :stream_targets_enabled, :persisted, :conn
+        :transcoder_enabled, :stream_targets_enabled, :conn
 
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
@@ -22,6 +22,10 @@ module Wowza
           transcoder_enabled: transcoder_enabled,
           stream_targets_enabled: stream_targets_enabled,
         }
+      end
+
+      def instances
+        Instances.new(conn, self)
       end
 
     end
