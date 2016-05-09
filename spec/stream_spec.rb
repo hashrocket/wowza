@@ -64,4 +64,17 @@ describe Wowza::REST::Stream do
       end
     end
   end
+
+  context '#find_by' do
+    it 'finds stream by name and app id' do
+      Mock5.with_mounted stream_api(stream_path, stream_response) do
+        stream = described_class.find_by(name: stream_name, app_id: 'live', conn: conn)
+
+        expect(stream.name).to eq(stream_name)
+        expect(stream.connected?).to eq(true)
+        expect(stream.recording?).to eq(false)
+        expect(stream.source_ip).to eq('rtmp://10.10.10.10:12345')
+      end
+    end
+  end
 end

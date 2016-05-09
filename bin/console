@@ -6,7 +6,11 @@ require "pry"
 
 server = Wowza::REST::Server.new(host: 'example.com', port: 8087, server: 'live')
 client = server.connect(username: 'username', password: 'password')
+conn = client.connection
 publishers = client.publishers.all
-application = Wowza::REST::Application.new id: 'live', conn: client.connection
+application = Wowza::REST::Application.new id: 'live', conn: conn
 streams = application.instances.all.first.incoming_streams
+
+stream_by_name = Wowza::REST::Stream.find_by name: 'Snowboarding', app_id: 'live', conn: conn
+
 binding.pry;

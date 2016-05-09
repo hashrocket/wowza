@@ -17,6 +17,10 @@ module Wowza
         }
       end
 
+      def self.find_by(attrs)
+        new(attrs).reload!
+      end
+
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
         super()
