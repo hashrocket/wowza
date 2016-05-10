@@ -2,7 +2,7 @@ module Wowza
   module REST
     class Stream
 
-      include ActiveModel::AttributeAssignment
+      include ActiveRecord::AttributeAssignment
 
       attr_accessor :name, :is_connected, :is_recording, :source_ip,
         :server_name, :app_id, :vhost_name, :instance_name, :conn

@@ -2,7 +2,7 @@ module Wowza
   module REST
     class Application
 
-      include ActiveModel::AttributeAssignment
+      include ActiveRecord::AttributeAssignment
 
       attr_accessor :id, :href, :app_type, :dvr_enabled, :drm_enabled,
         :transcoder_enabled, :stream_targets_enabled,

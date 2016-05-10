@@ -5,6 +5,7 @@ require 'base64'
 require 'json'
 require 'active_model'
 require 'active_support/core_ext/hash/indifferent_access'
+require 'active_record'
 
 require 'wowza/rest/publishers'
 require 'wowza/rest/publisher'

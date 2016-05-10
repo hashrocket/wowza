@@ -2,9 +2,9 @@ module Wowza
   module REST
     class Publisher
 
-      include ActiveModel::AttributeAssignment
+      include ActiveRecord::AttributeMethods::Dirty
+      include ActiveRecord::AttributeAssignment
       include ActiveModel::Serializers::JSON
-      include ActiveModel::Dirty
 
       attr_accessor :name, :password, :server_name, :persisted, :conn
       define_attribute_methods :name, :password, :server_name
@@ -75,7 +75,7 @@ module Wowza
         resp = conn.get resource_path
         attributes = JSON.parse(resp.body)
         assign_attributes(attributes) if attributes
-        clear_changes_information
+        reset_changes
       end
 
       def rollback!
@@ -87,7 +87,7 @@ module Wowza
           resp = conn.delete resource_path
           if resp.status == 204
             self.persisted = false
-            clear_changes_information
+            reset_changes
           end
         end
       end
