@@ -4,8 +4,8 @@ module Wowza
 
       attr_reader :uri
 
-      def initialize(host:, port:, server:)
-        @uri = URI("http://#{host}:#{port}/v2/servers/#{server}")
+      def initialize(host:, port:)
+        @uri = URI("http://#{host}:#{port}")
       end
 
       def connect(username:, password:)

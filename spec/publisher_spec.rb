@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Wowza::REST::Publisher do
 
   let(:server) do
-    Wowza::REST::Server.new(host: 'example.com', port: 1234, server: 'server')
+    Wowza::REST::Server.new(host: 'example.com', port: 1234)
   end
 
   let(:client) do
@@ -15,7 +15,7 @@ describe Wowza::REST::Publisher do
     context 'not persisted' do
       def create_publisher_api
         Mock5.mock('http://example.com:1234') do
-          post '/v2/servers/server/publishers' do
+          post '/v2/servers/_defaultServer_/publishers' do
             status 201
             headers 'Content-Type' => 'application/json'
             JSON.generate({
@@ -42,16 +42,16 @@ describe Wowza::REST::Publisher do
       def publishers_api(publishers)
         Mock5.mock('http://example.com:1234') do
 
-          get '/v2/servers/server/publishers' do
+          get '/v2/servers/_defaultServer_/publishers' do
             status 200
             headers 'Content-Type' => 'application/json'
             JSON.generate({
-              serverName: 'server',
+              serverName: '_defaultServer_',
               publishers: publishers
             })
           end
 
-          put '/v2/servers/server/publishers/name' do
+          put '/v2/servers/_defaultServer_/publishers/name' do
             status 200
             headers 'Content-Type' => 'application/json'
             JSON.generate({
@@ -98,16 +98,16 @@ describe Wowza::REST::Publisher do
       def publishers_api
         Mock5.mock('http://example.com:1234') do
 
-          get '/v2/servers/server/publishers' do
+          get '/v2/servers/_defaultServer_/publishers' do
             status 200
             headers 'Content-Type' => 'application/json'
             JSON.generate({
-              serverName: 'server',
+              serverName: '_defaultServer_',
               publishers: [{ name: 'name' }]
             })
           end
 
-          delete '/v2/servers/server/publishers/name' do
+          delete '/v2/servers/_defaultServer_/publishers/name' do
             halt 204
           end
 

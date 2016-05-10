@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Wowza::REST::StreamGroup do
 
   let(:server) do
-    Wowza::REST::Server.new(host: 'example.com', port: 1234, server: '_defaultServer_')
+    Wowza::REST::Server.new(host: 'example.com', port: 1234)
   end
 
   let(:client) do

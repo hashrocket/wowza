@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Wowza::REST::Client do
 
   let(:server) do
-    Wowza::REST::Server.new(host: 'example.com', port: 1234, server: 'server')
+    Wowza::REST::Server.new(host: 'example.com', port: 1234)
   end
 
   let(:client) do
@@ -13,7 +13,7 @@ describe Wowza::REST::Client do
   context '#status' do
     def status_api
       Mock5.mock('http://example.com:1234') do
-        get '/v2/servers/server/status' do
+        get '/v2/servers/_defaultServer_/status' do
           status 200
           headers 'Content-Type' => 'application/json'
           JSON.generate({

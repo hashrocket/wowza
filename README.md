@@ -25,7 +25,7 @@ Or install it yourself as:
 Create server:
 
 ```ruby
-server = Wowza::REST::Server.new(host: 'example.com', port: 8087, server: 'live')
+server = Wowza::REST::Server.new(host: 'example.com', port: 8087)
 ```
 
 Connect as client:

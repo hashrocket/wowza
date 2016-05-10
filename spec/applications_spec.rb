@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Wowza::REST::Applications do
 
   let(:server) do
-    Wowza::REST::Server.new(host: 'example.com', port: 1234, server: 'server')
+    Wowza::REST::Server.new(host: 'example.com', port: 1234)
   end
 
   let(:client) do

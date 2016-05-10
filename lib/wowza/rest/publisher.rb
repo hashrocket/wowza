@@ -6,8 +6,8 @@ module Wowza
       include ActiveModel::Serializers::JSON
       include ActiveModel::Dirty
 
-      attr_accessor :name, :password, :serverName, :persisted, :conn
-      define_attribute_methods :name, :password, :serverName
+      attr_accessor :name, :password, :server_name, :persisted, :conn
+      define_attribute_methods :name, :password, :server_name
 
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
@@ -19,7 +19,8 @@ module Wowza
       def attributes
         {
           name: name,
-          password: password
+          password: password,
+          server_name: server_name
         }
       end
 
@@ -98,11 +99,23 @@ module Wowza
       end
 
       def resource_path
-        "publishers/#{id}"
+        "#{server_path}/publishers/#{id}"
+      end
+
+      def resources_path
+        "#{server_path}/publishers"
       end
 
       def persist_path
-        persisted? ? resource_path : 'publishers'
+        persisted? ? resource_path : resources_path
+      end
+
+      def server_name
+        @server_name || "_defaultServer_"
+      end
+
+      def server_path
+        "/v2/servers/#{server_name}"
       end
 
     end
