@@ -18,6 +18,15 @@ module Wowza
         end
       end
 
+      def find(name)
+        resp = conn.get("#{resource_path}/#{name}")
+        attrs = JSON.parse(resp.body)
+        Publisher.new(name: attrs["name"]).tap do |p|
+          p.conn = conn
+          p.persisted = true
+        end
+      end
+
       def resource_path
         "#{server_path}/publishers"
       end

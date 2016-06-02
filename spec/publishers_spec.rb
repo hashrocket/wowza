@@ -19,6 +19,13 @@ describe Wowza::REST::Publishers do
     })
   end
 
+  let(:publisher_response) do
+    JSON.generate({
+      serverName: '_defaultServer_',
+      name: 'wowza'
+    })
+  end
+
   context '#all' do
 
     def publishers_api(response)
@@ -37,6 +44,27 @@ describe Wowza::REST::Publishers do
 
         expect(publishers.count).to eq(1)
         expect(publishers.first.name).to eq('wowza')
+      end
+    end
+  end
+
+  context '#find' do
+
+    def publishers_api(response)
+      Mock5.mock('http://example.com:1234') do
+        get '/v2/servers/_defaultServer_/publishers/wowza' do
+          status 200
+          headers 'Content-Type' => 'application/json'
+          response
+        end
+      end
+    end
+
+    it 'finds publisher by name' do
+      Mock5.with_mounted publishers_api(publisher_response) do
+        publisher = client.publishers.find('wowza')
+
+        expect(publisher.name).to eq('wowza')
       end
     end
   end
