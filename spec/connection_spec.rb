@@ -30,6 +30,32 @@ describe Wowza::REST::Connection do
     end
   end
 
+  it 'handles 401 digest response' do
+    endpoint = Mock5.mock(base_url(uri)) do
+      get '/person' do
+        auth = request.env["HTTP_AUTHORIZATION"]
+        if auth
+          {
+            data: "some data"
+          }.to_json
+        else
+          nonce = 'secret'
+          headers['WWW-Authenticate'] = %{Digest realm="Example", domain="/", nonce="#{nonce}", algorithm=MD5, qop="auth"}
+          status 401
+          {
+            message: "Unauthorized"
+          }.to_json
+        end
+      end
+    end
+    Mock5.with_mounted endpoint do
+      conn = Wowza::REST::Connection.new(uri, auth)
+      res = conn.get('/person')
+      expect(res.code).to eq("200")
+      expect(JSON.parse(res.body)).to eq({ "data" => "some data" })
+    end
+  end
+
 end
 
 def base_url(uri)

@@ -50,8 +50,25 @@ module Wowza
           req["Content-Type"] = "application/json"
           req["Accept"] = "application/json"
           yield(req) if block_given?
-          http.request req
+          res = http.request req
+          if res.code == "401"
+            auth = digest_auth(req, res)
+            req["Authorization"] = auth
+            http.request req
+          else
+            res
+          end
         end
+      end
+
+      def digest_auth(req, res)
+        uri = req.uri
+        uri.user = auth.username
+        uri.password = auth.password
+
+        realm = res['www-authenticate']
+        method = req.method.upcase
+        Net::HTTP::DigestAuth.new.auth_header(uri, realm, method)
       end
 
     end

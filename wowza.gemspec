@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "indifference"
   spec.add_dependency "assignment"
+  spec.add_dependency "net-http-digest_auth"
 end

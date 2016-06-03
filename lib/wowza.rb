@@ -3,6 +3,7 @@ require 'base64'
 require 'json'
 require 'indifference' unless defined?(ActiveSupport)
 require 'assignment'
+require 'net/http/digest_auth'
 
 require 'wowza/will_change'
 
