@@ -1,26 +1,56 @@
 module Wowza
   module REST
     class Connection
-      extend Forwardable
 
       attr_reader :uri, :auth
-      def_delegator :conn, :get
-      def_delegator :conn, :post
-      def_delegator :conn, :put
-      def_delegator :conn, :delete
 
       def initialize(uri, auth)
         @auth = auth
         @uri = uri
       end
 
-      def conn
-        @_conn ||= Faraday.new(uri).tap do |conn|
-          conn.headers['Content-Type'] = 'application/json'
-          conn.headers['Accept'] = 'application/json'
-          conn.headers['Accept-Encoding'] = 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3'
-          conn.request :digest, auth.username, auth.password
-          conn.adapter  Faraday.default_adapter
+      def get(path, query={}, &block)
+        request_method(:get, path, query, &block)
+      end
+
+      def post(path, query={}, &block)
+        request_method(:post, path, query, &block)
+      end
+
+      def put(path, query={}, &block)
+        request_method(:put, path, query, &block)
+      end
+
+      def delete(path, query={}, &block)
+        request_method(:delete, path, query, &block)
+      end
+
+      private
+
+      def request_method(method, path, query, &block)
+        full_uri = URI.join(uri, path)
+        request(method, full_uri, query, &block)
+      end
+
+      def start(uri, &block)
+        Net::HTTP.start( uri.host, uri.port,
+          use_ssl: uri.scheme == 'https', &block)
+      end
+
+      REQUEST_TYPES = {
+        get: Net::HTTP::Get,
+        post: Net::HTTP::Post,
+        put: Net::HTTP::Put,
+        delete: Net::HTTP::Delete,
+      }
+
+      def request(method, uri, query)
+        start(uri) do |http|
+          req = REQUEST_TYPES[method].new uri, query
+          req["Content-Type"] = "application/json"
+          req["Accept"] = "application/json"
+          yield(req) if block_given?
+          http.request req
         end
       end
 

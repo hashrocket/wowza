@@ -35,11 +35,10 @@ module Wowza
       end
 
       def save
-        resp = conn.send(persist_method) do |req|
-          req.url persist_path
+        resp = conn.send(persist_method, persist_path) do |req|
           req.body = to_json
         end
-        if resp.status == 201 || resp.status == 200
+        if resp.code == "201" || resp.code == "200"
           self.persisted = true
         end
         changes_applied
@@ -80,7 +79,7 @@ module Wowza
       def destroy
         if persisted?
           resp = conn.delete resource_path
-          if resp.status == 204
+          if resp.code == "204"
             self.persisted = false
             clear_changes_information
           end

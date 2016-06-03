@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mock5", "~> 1.0.8"
   spec.add_development_dependency "pry"
 
-  spec.add_dependency "faraday", "~> 0.9"
-  spec.add_dependency "faraday-digestauth"
   spec.add_dependency "indifference"
   spec.add_dependency "assignment"
 end

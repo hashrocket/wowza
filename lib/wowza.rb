@@ -1,6 +1,4 @@
 require 'wowza/version'
-require 'faraday'
-require 'faraday/digestauth'
 require 'base64'
 require 'json'
 require 'indifference' unless defined?(ActiveSupport)

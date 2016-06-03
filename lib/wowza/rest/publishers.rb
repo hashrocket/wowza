@@ -20,7 +20,7 @@ module Wowza
 
       def find(name)
         resp = conn.get("#{resource_path}/#{name}")
-        if resp.status == 200
+        if resp.code == "200"
           attrs = JSON.parse(resp.body)
           Publisher.new(name: attrs["name"]).tap do |p|
             p.conn = conn
