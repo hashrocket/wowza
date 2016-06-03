@@ -2,7 +2,7 @@ module Wowza
   module REST
     class Instance
 
-      include ActiveRecord::AttributeAssignment
+      include Assignment::Attributes
 
       attr_accessor :incoming_streams, :name, :conn
 

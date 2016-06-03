@@ -2,12 +2,11 @@ module Wowza
   module REST
     class Publisher
 
-      include ActiveRecord::AttributeMethods::Dirty
-      include ActiveRecord::AttributeAssignment
-      include ActiveModel::Serializers::JSON
+      include Assignment::Attributes
+      include Wowza::WillChange
 
       attr_accessor :name, :password, :server_name, :persisted, :conn
-      define_attribute_methods :name, :password, :server_name
+      track_changes :name, :password, :server_name
 
       def initialize(attributes={})
         assign_attributes(attributes) if attributes
@@ -20,15 +19,18 @@ module Wowza
         {
           name: name,
           password: password,
-          server_name: server_name
         }
       end
 
+      def to_json
+        attributes.to_json
+      end
+
       def id
-        if changes["name"].present?
-          changes["name"].first
-        else
+        if changes[:name].nil?
           name
+        else
+          changes[:name].first
         end
       end
 
@@ -43,13 +45,6 @@ module Wowza
         changes_applied
       end
 
-      def attrs
-        {
-          name: name,
-          password: password
-        }
-      end
-
       def persisted=(persisted)
         @persisted = persisted
         if persisted
@@ -62,12 +57,12 @@ module Wowza
       end
 
       def name=(newName)
-        name_will_change! unless newName == @name
+        will_change! :name unless newName == @name
         @name = newName
       end
 
       def password=(newPassword)
-        password_will_change! unless newPassword == @password
+        will_change! :password unless newPassword == @password
         @password = newPassword
       end
 
@@ -75,7 +70,7 @@ module Wowza
         resp = conn.get resource_path
         attributes = JSON.parse(resp.body)
         assign_attributes(attributes) if attributes
-        reset_changes
+        clear_changes_information
       end
 
       def rollback!
@@ -87,9 +82,13 @@ module Wowza
           resp = conn.delete resource_path
           if resp.status == 204
             self.persisted = false
-            reset_changes
+            clear_changes_information
           end
         end
+      end
+
+      def server_name
+        @server_name || "_defaultServer_"
       end
 
       private
@@ -108,10 +107,6 @@ module Wowza
 
       def persist_path
         persisted? ? resource_path : resources_path
-      end
-
-      def server_name
-        @server_name || "_defaultServer_"
       end
 
       def server_path

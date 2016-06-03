@@ -2,7 +2,7 @@ module Wowza
   module REST
     class StreamGroup
 
-      include ActiveRecord::AttributeAssignment
+      include Assignment::Attributes
 
       attr_accessor :stream_name, :name, :is_transcode_result, :members,
         :server_name, :app_id, :vhost_name, :instance_name, :conn

@@ -3,9 +3,10 @@ require 'faraday'
 require 'faraday/digestauth'
 require 'base64'
 require 'json'
-require 'active_model'
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_record'
+require 'indifference' unless defined?(ActiveSupport)
+require 'assignment'
+
+require 'wowza/will_change'
 
 require 'wowza/rest/publishers'
 require 'wowza/rest/publisher'
