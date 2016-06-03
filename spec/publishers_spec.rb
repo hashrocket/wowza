@@ -26,6 +26,10 @@ describe Wowza::REST::Publishers do
     })
   end
 
+  let(:publisher_not_found_response) do
+    nil
+  end
+
   context '#all' do
 
     def publishers_api(response)
@@ -50,10 +54,10 @@ describe Wowza::REST::Publishers do
 
   context '#find' do
 
-    def publishers_api(response)
+    def publishers_api(response, status_code=200)
       Mock5.mock('http://example.com:1234') do
         get '/v2/servers/_defaultServer_/publishers/wowza' do
-          status 200
+          status status_code
           headers 'Content-Type' => 'application/json'
           response
         end
@@ -65,6 +69,14 @@ describe Wowza::REST::Publishers do
         publisher = client.publishers.find('wowza')
 
         expect(publisher.name).to eq('wowza')
+      end
+    end
+
+    it 'returns nil when publisher not found' do
+      Mock5.with_mounted publishers_api(publisher_not_found_response, 404) do
+        publisher = client.publishers.find('wowza')
+
+        expect(publisher).to eq(nil)
       end
     end
   end
